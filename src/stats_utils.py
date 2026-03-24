@@ -1,6 +1,6 @@
 import pandas as pd
 from scipy.stats import chi2_contingency
-
+import numpy as np
 
 
 def analyze_independence(df, col1, col2):
@@ -21,7 +21,17 @@ def analyze_independence(df, col1, col2):
         columns=observed_table.columns
     ).round(2)
 
-    return observed_table, expected_table, chi2, p_value
+    # calculate total number of observations in contigency table
+    n = observed_table.sum().sum()
+
+    
+    # find min dimension - 1 or we can either use rows-1 or cols-1
+    min_dim = min(observed_table.shape) - 1
+
+    # Appying cramer's v formula
+    cramer_v = np.sqrt(chi2/(n*min_dim))
+
+    return observed_table, expected_table, chi2, p_value, cramer_v
 
 # if __name__ == "__main__":
 
