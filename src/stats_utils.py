@@ -1,5 +1,5 @@
 import pandas as pd
-from scipy.stats import chi2_contingency
+from scipy.stats import chi2_contingency, chisquare
 import numpy as np
 
 
@@ -29,10 +29,25 @@ def analyze_independence(df, col1, col2):
     min_dim = min(observed_table.shape) - 1
 
     # Appying cramer's v formula
-    cramer_v = np.sqrt(chi2/(n*min_dim))
+    cramer_v = np.sqrt(chi2 / (n * min_dim)) if min_dim > 0 else 0.0
 
     return observed_table, expected_table, chi2, p_value, cramer_v
 
-# if __name__ == "__main__":
-
+def analyze_goodness_of_fit(observed_freqs, expected_freqs):
+    """
+    Computes the Chi-square Goodness of Fit test.
+    Target: Exercises 5, 6, 10.
+    
+    Parameters:
+    - observed_freqs: list or array of observed empirical frequencies.
+    - expected_freqs: list or array of theoretical expected frequencies.
+    """
+    # Ensure inputs are numpy arrays for element-wise operations if needed later
+    obs = np.array(observed_freqs)
+    exp = np.array(expected_freqs)
+    
+    # Chi-square goodness of fit test
+    chi2, p_value = chisquare(f_obs=obs, f_exp=exp)
+    
+    return chi2, p_value
     
